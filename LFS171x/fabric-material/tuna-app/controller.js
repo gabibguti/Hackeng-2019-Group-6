@@ -28,6 +28,7 @@ return{
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -103,6 +104,7 @@ return{
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -252,6 +254,7 @@ return{
 		var key = req.params.id
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -325,6 +328,7 @@ return{
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -477,6 +481,7 @@ return{
 		var key = req.params.shipmentId
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -660,6 +665,7 @@ return{
 		var key = req.params.id
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -732,6 +738,7 @@ return{
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
@@ -889,6 +896,7 @@ return{
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
+		res.setHeader("Access-Control-Allow-Origin", "*");
 		var channel = fabric_client.newChannel('mychannel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
