@@ -113,7 +113,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
 	} else if function == "getHistory" {
-			return s.getHistory(APIstub,args)
+		return s.getHistory(APIstub, args)
 	} else if function == "recordTuna" {
 		return s.recordTuna(APIstub, args)
 	} else if function == "queryAllTuna" {
@@ -130,8 +130,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 Used to view the records of one particular tuna
 It takes one argument -- the key for the tuna in question
 */
-func (s *SmartContract) getHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response 
-{
+func (s *SmartContract) getHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
@@ -143,19 +142,18 @@ func (s *SmartContract) getHistory(APIstub shim.ChaincodeStubInterface, args []s
 	}
 	client := Client{}
 	json.Unmarshal(clientAsBytes, &client)
-	history := client.history
+	history := client.History
 	i := 0
 	shipmentHistory := []Shipment{}
-	for i < len(history) 
-	{
-		deliverId := history[i];
-		shipmentAsBytes, _ = APIstub.GetState(deliverId)
+	for i < len(history) {
+		deliverId := history[i]
+		shipmentAsBytes, _ := APIstub.GetState(deliverId)
 		shipment := Shipment{}
 		json.Unmarshal(shipmentAsBytes, &shipment)
-		shipmentHistory = append(shipmentHistory,shipment)
+		shipmentHistory = append(shipmentHistory, shipment)
 		i = i + 1
 	}
-	shipmentHistoryAsBytes, _ = json.Marshal(shipmentHistory)
+	shipmentHistoryAsBytes, _ := json.Marshal(shipmentHistory)
 	return shim.Success(shipmentHistoryAsBytes)
 }
 
@@ -192,7 +190,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	clients := []Client{
-		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{}},
+		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{"50001"}},
 	}
 
 	carriers := []Carrier{

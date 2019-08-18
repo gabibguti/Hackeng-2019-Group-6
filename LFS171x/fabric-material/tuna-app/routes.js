@@ -17,6 +17,6 @@ module.exports = function(app){
     tuna.change_holder(req, res);
   });
     app.get('/get_history/:id', function(req, res){
-    tuna.get_client(req, res);
+    tuna.get_history(req, res);
   });
 }
