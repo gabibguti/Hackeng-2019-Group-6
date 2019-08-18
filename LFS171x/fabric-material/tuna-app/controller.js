@@ -588,6 +588,7 @@ return{
 
 		var fabric_client = new Fabric_Client();
 		var key = req.params.id
+		res.setHeader("Access-Control-Allow-Origin", "*");
 
 		// setup the fabric network
 		var channel = fabric_client.newChannel('mychannel');

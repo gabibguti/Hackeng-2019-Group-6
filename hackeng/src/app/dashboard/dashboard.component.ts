@@ -26,13 +26,12 @@ export class DashboardComponent implements OnInit {
      }
 
   ngOnInit() {
-    // this.getOrders();
-    pedidos.forEach(order => {
-      if(order.status==="In Transit"){
-        this.routeOrders.push(order);
-      }
-    });
-    console.log
+    this.getOrders();
+    // pedidos.forEach(order => {
+    //   if(order.status==="In Transit"){
+    //     this.routeOrders.push(order);
+    //   }
+    // });
   }
 
   getOrders(): void {
@@ -40,6 +39,7 @@ export class DashboardComponent implements OnInit {
     this.trackingService.getOrders('20001').subscribe(orders => {
       console.log("orders", orders);
       orders.forEach(order => {
+        console.log('order', order);
         if(order.status==="In Transit"){
           this.routeOrders.push(order);
         }
