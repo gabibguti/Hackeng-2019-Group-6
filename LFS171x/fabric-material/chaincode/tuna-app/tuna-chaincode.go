@@ -50,6 +50,12 @@ type Product struct {
 	Name string `json:"name"`
 }
 
+type ProductInList struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	Qtd  int    `json:"qtd"`
+}
+
 type Client struct {
 	Id       string   `json:"id"`
 	Name     string   `json:"name"`
@@ -79,6 +85,15 @@ type Shipment struct {
 	ClientId string      `json:"clientid"`
 	Products []ProductVO `json:"products"`
 	TripId   string      `json:"tripid"`
+}
+
+type ShipmentVO struct {
+	Id       string          `json:"id"`
+	Status   string          `json:"status"`
+	Arrival  string          `json:"arrival"`
+	ClientId string          `json:"clientid"`
+	Products []ProductInList `json:"products"`
+	TripId   string          `json:"tripid"`
 }
 
 type Trip struct {
@@ -113,6 +128,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryTuna(APIstub, args)
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
+	} else if function == "getHistory" {
+		return s.getHistory(APIstub, args)
+	} else if function == "getShipment" {
+		return s.getShipment(APIstub, args)
 	} else if function == "recordTuna" {
 		return s.recordTuna(APIstub, args)
 	} else if function == "queryAllTuna" {
@@ -124,6 +143,81 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
+}
+
+/*
+ * The queryTuna method *
+Used to view the records of one particular tuna
+It takes one argument -- the key for the tuna in question
+*/
+func (s *SmartContract) getHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	clientAsBytes, _ := APIstub.GetState(args[0])
+	if clientAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	client := Client{}
+	json.Unmarshal(clientAsBytes, &client)
+	history := client.History
+	i := 0
+	shipmentHistory := []Shipment{}
+	for i < len(history) {
+		deliverId := history[i]
+		shipmentAsBytes, _ := APIstub.GetState(deliverId)
+		shipment := Shipment{}
+		json.Unmarshal(shipmentAsBytes, &shipment)
+		shipmentHistory = append(shipmentHistory, shipment)
+		i = i + 1
+	}
+	shipmentHistoryAsBytes, _ := json.Marshal(shipmentHistory)
+	return shim.Success(shipmentHistoryAsBytes)
+}
+
+/*
+ * The queryTuna method *
+Used to view the records of one particular tuna
+It takes one argument -- the key for the tuna in question
+*/
+func (s *SmartContract) getShipment(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	shipmentAsBytes, _ := APIstub.GetState(args[0])
+	if shipmentAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	shipment := Shipment{}
+	json.Unmarshal(shipmentAsBytes, &shipment)
+	productList := shipment.Products
+	newProductList := []ProductInList{}
+	i := 0
+	for i < len(productList) {
+		productId := productList[i].ProductId
+		productQtd := productList[i].Qtd
+		productAsBytes, _ := APIstub.GetState(productId)
+		product := Product{}
+		json.Unmarshal(productAsBytes, &product)
+		productName := product.Name
+		newProductList = append(newProductList,
+			ProductInList{Id: productId, Name: productName, Qtd: productQtd})
+		i = i + 1
+	}
+
+	shipmentVO := ShipmentVO{}
+	shipmentVO.Id = shipment.Id
+	shipmentVO.Arrival = shipment.Arrival
+	shipmentVO.ClientId = shipment.ClientId
+	shipmentVO.Status = shipment.Status
+	shipmentVO.TripId = shipment.TripId
+	shipmentVO.Products = newProductList
+	shipmentVOAsBytes, _ := json.Marshal(shipmentVO)
+	return shim.Success(shipmentVOAsBytes)
 }
 
 /*
@@ -227,7 +321,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	clients := []Client{
-		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{}},
+		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{"50001"}},
 	}
 
 	carriers := []Carrier{
