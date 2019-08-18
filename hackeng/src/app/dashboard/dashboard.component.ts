@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getOrders(): void {
-    this.trackingService.getOrders().subscribe(orders => {
+    this.trackingService.getOrders('1234').subscribe(orders => {
       console.log("GET ORDERS", orders);
     });
   }

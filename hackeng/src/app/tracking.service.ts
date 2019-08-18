@@ -18,8 +18,8 @@ export class TrackingService {
   constructor(
     private http: HttpClient) { }
 
-  getOrders (): Observable<Order[]> {
-    var url = this.trackingUrl + '/orders'
+  getOrders (id: string): Observable<Order[]> {
+    var url = this.trackingUrl + '/get_history/' + encodeURIComponent(id);
     return this.http.get<Order[]>(url);
   }
 

@@ -1,0 +1,16 @@
+h1 {
+    color: black;
+    font-size: 16;
+}
+
+h2 {
+    font-size: 14;
+    color: black;
+}
+
+.textst {
+    font-family:Verdana, Geneva, Tahoma, sans-serif; 
+    text-align: center; 
+    flex: auto;
+    margin-top: 15px;
+}
