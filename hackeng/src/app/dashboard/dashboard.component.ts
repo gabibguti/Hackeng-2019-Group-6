@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
-import { Pedido } from '../pedidos';
+import { Pedido, Order } from '../pedidos';
 import { Router } from '@angular/router';
 import { pedidos } from '../mock-heroes';
 import { TrackingService } from '../tracking.service';
-import { Order } from '../Order';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,10 +12,9 @@ import { Order } from '../Order';
 })
 export class DashboardComponent implements OnInit {
   heroes: Hero[] = [];
-  public selectedOrder: Pedido;
-  public routeOrders: Pedido[] = [];
-  public pedidos: Pedido[] = pedidos;
-  public test: Order[] = [];
+  public selectedOrder: Order;
+  public routeOrders: Order[] = [];
+  public pedidos: Order[];
 
   constructor(
     private trackingService: TrackingService,
@@ -24,23 +22,20 @@ export class DashboardComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.getPedidos();
-    this.pedidos.forEach(pedido => {
-      if(pedido.status==="route"){
-        this.routeOrders.push(pedido);
-      }
-    });
+    this.getOrders();
   }
 
   getOrders(): void {
-    this.trackingService.getOrders('1234').subscribe(orders => {
+    this.trackingService.getOrders('50001').subscribe(orders => {
+      orders.forEach(order => {
+        if(order.status==="In Transit"){
+          this.routeOrders.push(order);
+        }
+      });
+      this.pedidos = orders;
+
       console.log("GET ORDERS", orders);
     });
-  }
-
-  getPedidos(): void {
-    console.log("pedidos", this.pedidos)
-    //request pro back
   }
 
   getInfo(){

@@ -11,3 +11,9 @@ export class Pedido {
     viagem: string;
   }
   
+  export class Order {
+    id: string;
+    status: string;
+    arrival: string;
+    products: []
+  }

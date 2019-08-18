@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Hero } from '../hero';
-import { Pedido } from '../pedidos';
+import { Pedido, Order } from '../pedidos';
 import {pedidos} from '../mock-heroes'
 import { Router } from '@angular/router';
 import { TrackingService } from '../tracking.service';
@@ -13,23 +13,28 @@ import { TrackingService } from '../tracking.service';
 })
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
-  public pedidos: Pedido[] = pedidos;
-  public orders: Pedido[] = [];
-  public selectedOrder: Pedido;
+  public recordOrders: Order[] = [];
+  public selectedOrder: Order;
 
-  constructor(private heroService: TrackingService,
+  constructor(private trackingService: TrackingService,
     private router: Router
     ) { }
 
-  ngOnInit() {
-    // this.getHeroes();
-    console.log("pedidos", this.pedidos)
-    pedidos.forEach(pedido => {
-      if(pedido.status!=="route"){
-        this.orders.push(pedido);
-      }
-    });
-  }
+    ngOnInit() {
+      this.getOrders();
+    }
+  
+    getOrders(): void {
+      this.trackingService.getOrders('50001').subscribe(orders => {
+        orders.forEach(order => {
+          if(order.status!=="In Transit"){
+            this.recordOrders.push(order);
+          }
+        });  
+        console.log("GET ORDERS", orders);
+      });
+    }
+
 
   getInfo(){
     if(!this.selectedOrder){
@@ -37,26 +42,5 @@ export class HeroesComponent implements OnInit {
     }
     this.router.navigate(["/detail", this.selectedOrder.id])
   }
-
-  // getHeroes(): void {
-  //   this.heroService.getHeroes()
-  //   .subscribe(heroes => this.heroes = heroes);
-  // }
-
-  // add(name: string): void {
-  //   name = name.trim();
-  //   if (!name) { return; }
-  //   this.heroService.addHero({ name } as Hero)
-  //     .subscribe(hero => {
-  //       this.heroes.push(hero);
-  //     });
-  // }
-
-  // delete(hero: Hero): void {
-  //   this.heroes = this.heroes.filter(h => h !== hero);
-  //   this.heroService.deleteHero(hero).subscribe();
-  // }
-
-
 
 }
