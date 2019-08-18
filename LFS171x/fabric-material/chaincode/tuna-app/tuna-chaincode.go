@@ -132,6 +132,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.getHistory(APIstub, args)
 	} else if function == "getShipment" {
 		return s.getShipment(APIstub, args)
+	} else if function == "changeStatus" {
+		return s.changeStatus(APIstub, args)
+	} else if function == "changeTruckPosition" {
+		return s.changeTruckPosition(APIstub, args)
 	} else if function == "recordTuna" {
 		return s.recordTuna(APIstub, args)
 	} else if function == "queryAllTuna" {
@@ -143,6 +147,68 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
+}
+
+/*
+ * The changeTunaHolder method *
+The data in the world state can be updated with who has possession.
+This function takes in 2 arguments, tuna id and new holder name.
+*/
+func (s *SmartContract) changeTruckPosition(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	vehicleAsBytes, _ := APIstub.GetState(args[0])
+	if vehicleAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	vehicle := Vehicle{}
+
+	json.Unmarshal(vehicleAsBytes, &vehicle)
+	// Normally check that the specified argument is a valid holder of tuna
+	// we are skipping this check for this example
+	vehicle.Location = args[1]
+
+	vehicleAsBytes, _ = json.Marshal(vehicle)
+	err := APIstub.PutState(args[0], vehicleAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+	}
+
+	return shim.Success(nil)
+}
+
+/*
+ * The changeTunaHolder method *
+The data in the world state can be updated with who has possession.
+This function takes in 2 arguments, tuna id and new holder name.
+*/
+func (s *SmartContract) changeStatus(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	shipmentAsBytes, _ := APIstub.GetState(args[0])
+	if shipmentAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	shipment := Shipment{}
+
+	json.Unmarshal(shipmentAsBytes, &shipment)
+	// Normally check that the specified argument is a valid holder of tuna
+	// we are skipping this check for this example
+	shipment.Status = args[1]
+
+	shipmentAsBytes, _ = json.Marshal(shipment)
+	err := APIstub.PutState(args[0], shipmentAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+	}
+
+	return shim.Success(nil)
 }
 
 /*
@@ -314,14 +380,16 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	products := []Product{
 		Product{Id: "10001", Name: "Chocolate Frog"},
+		Product{Id: "10002", Name: "Wand"},
 	}
 
 	suppliers := []Supplier{
-		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "67.0006, -70.5476", ProductIds: []string{products[0].Id}},
+		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "-22.764571,-43.4192591", ProductIds: []string{products[0].Id}},
 	}
 
 	clients := []Client{
-		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{"50001"}},
+		Client{Id: "20001", Name: "Honeydukes", Location: "-22.9499071,-43.189428", History: []string{"50001"}},
+		Client{Id: "20002", Name: "Oliwanders", Location: "-22.9557474,-43.1995033", History: []string{"50002"}},
 	}
 
 	carriers := []Carrier{
@@ -329,21 +397,27 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	vehicles := []Vehicle{
-		Vehicle{Id: "40001", Location: "51.9435, 8.2735", CarrierId: carriers[0].Id},
+		Vehicle{Id: "40001", Location: "-22.764571,-43.4192591", CarrierId: carriers[0].Id},
 	}
 
-	productsVO := []ProductVO{
+	productsVO1 := []ProductVO{
 		ProductVO{ProductId: "10001", Qtd: 10},
 	}
 
+	productsVO2 := []ProductVO{
+		ProductVO{ProductId: "10002", Qtd: 10},
+	}
+
 	shipments := []Shipment{
-		Shipment{Id: "50001", Status: "Delivered", Arrival: "00:00:00T00:00:00",
-			ClientId: "20001", Products: productsVO, TripId: "60001"},
+		Shipment{Id: "50001", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+			ClientId: "20001", Products: productsVO1, TripId: "60001"},
+		Shipment{Id: "50002", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+			ClientId: "20002", Products: productsVO2, TripId: "60001"},
 	}
 
 	trips := []Trip{
 		Trip{Id: "60001", VehicleId: "40001", SupplierId: carriers[0].Id,
-			Shipments: []string{"50001"}, Departure: "00:00:00T00:00:00"},
+			Shipments: []string{"50001", "50002"}, Departure: "00:00:00T00:00:00"},
 	}
 
 	i := 0
