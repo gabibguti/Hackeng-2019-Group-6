@@ -1,0 +1,48 @@
+h1 {
+    color: black;
+    font-size: 16;
+}
+
+h2 {
+    font-size: 14;
+    color: black;
+}
+
+.textst {
+    font-family:Verdana, Geneva, Tahoma, sans-serif; 
+    text-align: center; 
+    flex: auto;
+    margin-top: 15px;
+}
+
+.button {
+    background-color: #e7e7e7; /* Green */
+    border: none;
+    color: black;
+    padding: 10px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .cancel {
+    color: #d10202;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .notdelivered {
+    color: #d10202;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+.tabletitle {
+    color: #808080;
+    font-size: 12px;
+    font-weight: bold;
+}

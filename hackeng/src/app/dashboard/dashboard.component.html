@@ -1,0 +1,21 @@
+<h3>Meus Pedidos</h3>
+<div class="grid grid-pad">
+
+  <table id="t01">
+      <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Status</th>
+      </tr>
+      <tr class="row selected" *ngFor="let pedido of routeOrders; let i = index" (click)="selectedOrder = pedido"
+      [class.selected]="selectedOrder && selectedOrder.id === pedido.id" >
+        <td>{{i + 1}}</td>
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.status }}</td>
+      </tr>
+    </table>
+  
+    <button class="info" (click)="getInfo()"> Show Info</button>
+</div>
+
+<!-- <app-hero-search></app-hero-search> -->

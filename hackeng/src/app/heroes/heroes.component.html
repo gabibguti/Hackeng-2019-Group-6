@@ -1,0 +1,43 @@
+<!-- <h2>My Heroes</h2>
+
+<div>
+  <label>Hero name:
+    <input #heroName />
+  </label>
+  (click) passes input value to add() and then clears the input
+  <button (click)="add(heroName.value); heroName.value=''">
+    add
+  </button>
+</div>
+
+<ul class="heroes">
+  <li *ngFor="let hero of heroes">
+    <a routerLink="/detail/{{hero.id}}">
+      <span class="badge">{{hero.id}}</span> {{hero.name}}
+    </a>
+    <button class="delete" title="delete hero"
+      (click)="delete(hero)">x</button>
+  </li>
+</ul> -->
+
+<h3>My Records</h3>
+<div class="grid grid-pad">
+
+  <table id="t01">
+      <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Status</th>
+      </tr>
+      <tr class="row selected" *ngFor="let pedido of orders; let i = index" (click)="selectedOrder = pedido"
+      [class.selected]="selectedOrder && selectedOrder.id === pedido.id" >
+        <td>{{i + 1 }}</td>
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.status }}</td>
+      </tr>
+    </table>
+  
+    <button class="info" (click)="getInfo()"> Show Info</button>
+</div>
+
+<!-- <app-hero-search></app-hero-search> -->

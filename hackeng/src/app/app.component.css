@@ -1,0 +1,33 @@
+/* AppComponent's private CSS styles */
+h1 {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+h2 {
+  font-size: 2em;
+  margin-top: 0;
+  padding-top: 0;
+}
+.but {
+  padding: 5px 10px;
+  text-decoration: none;
+  margin-top: 10px;
+  margin-right: 5px;
+  display: inline-block;
+  background-color: #eee;
+  border-radius: 4px;
+}
+.topBut .but:visited, .but:link {
+  color: #334953;
+}
+.topBut .but:hover {
+  color: #039be5;
+  background-color: #CFD8DC;
+}
+.topBut .but.active {
+  color: #039be5;
+}
+
+.selected{
+  color: #039be5;
+}

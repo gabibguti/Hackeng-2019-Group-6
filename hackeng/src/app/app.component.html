@@ -1,0 +1,11 @@
+<h1>{{title}}</h1>
+<!-- <nav>
+  <a routerLink="/dashboard">Pedidos</a>
+  <a routerLink="/heroes">Histórico</a>
+</nav> -->
+<div class="topBut">
+  <button class="but" (click)="changeTabs('dashboard')" [class.selected]="selectedTab==='dashboard'">Orders</button>
+  <button class="but" (click)="changeTabs('heroes')" [class.selected]="selectedTab==='heroes'">Records</button>
+</div>
+<router-outlet></router-outlet>
+<!-- <app-messages></app-messages> -->
