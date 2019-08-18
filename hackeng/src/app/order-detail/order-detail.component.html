@@ -4,7 +4,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
-<div style="margin: 15px">
+
+<div *ngIf="order"  style="margin: 15px">
     <br />
     <div class="row">
         <h1>Order {{order.id}}</h1>
@@ -69,7 +70,7 @@
     </div>
     <br />
     <br />
-    <div>
+    <div *ngIf="order">
         <h3>Products</h3>
         <br/>
         <div class="row">
@@ -89,7 +90,7 @@
                     <i class="fas fa-cube"></i>
                 </div>
                 <div class="col-2">
-                    <span>{{p.id}}</span>
+                    <span>{{p.productid}}</span>
                 </div>
                 <div class="col-9">
                     <span>{{p.qtd}}</span>

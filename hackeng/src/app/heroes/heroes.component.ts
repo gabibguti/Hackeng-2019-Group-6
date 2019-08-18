@@ -21,16 +21,12 @@ export class HeroesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-      // this.getOrders();
-      pedidos.forEach(order => {
-        if(order.status!=="In Transit"){
-          this.recordOrders.push(order);
-        }
-      });
+      this.getOrders();
     }
   
     getOrders(): void {
       this.trackingService.getOrders('50001').subscribe(orders => {
+        console.log("order rec",orders)
         orders.forEach(order => {
           if(order.status!=="In Transit"){
             this.recordOrders.push(order);

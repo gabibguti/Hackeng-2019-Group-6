@@ -27,11 +27,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getOrders();
-    // pedidos.forEach(order => {
-    //   if(order.status==="In Transit"){
-    //     this.routeOrders.push(order);
-    //   }
-    // });
   }
 
   getOrders(): void {
@@ -54,6 +49,7 @@ export class DashboardComponent implements OnInit {
     if(!this.selectedOrder){
       return;
     }
+    console.log(this.selectedOrder.id);
     this.router.navigate(["/orderdetail", this.selectedOrder.id])
   }
 

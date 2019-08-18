@@ -22,28 +22,34 @@ export class OrderDetailComponent implements OnInit {
   success = true;
   cancelled = false;
   products: Product[] = 
-  [{id: '5252653', qtd: 10},
-  {id: '52u49253', qtd: 2}];
+  [{productid: '5252653', qtd: 10},
+  {productid: '52u49253', qtd: 2}];
 
   test: number = 0;
 
   constructor(private trackingService: TrackingService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute) {
+      this.getOrders();
+     }
 
   ngOnInit() {
-    // this.trackingService.getTimeForecast(this.id).subscribe(data => {
-    //   this.timeleft = data;
-    // });
+
+  }
+
+  getOrders(): void {
     const id = +this.route.snapshot.paramMap.get('id');
-    pedidos.forEach(element => {
-      if(element.id === id.toString()){
-        this.order = element;
-        this.getStatus();
-      }
+    this.trackingService.getOrders('20001').subscribe(orders => {
+      orders.forEach(order => {
+        if(order.id === id.toString()){
+          console.log('entrou');
+          this.order = order;
+          this.trackingService.getTimeForecast(order.id).subscribe(data => {
+            this.timeleft = data;
+          });
+          this.getStatus();
+        }
+      });  
     });
-
-    console.log('pedido', this.order);
-
   }
 
   Update() {
@@ -53,6 +59,7 @@ export class OrderDetailComponent implements OnInit {
           this.shipping = true;
         break;
         case 1:
+            this.shipping = true;
           this.ontheway = true;
           this.showCancel = true;
           break;
@@ -98,9 +105,10 @@ export class OrderDetailComponent implements OnInit {
   }
 
   getStatus(){
+    console.log('pedido Status', this.order);
     if(this.order.status==="In Transit"){
-      this.shipping = true;
-      this.ontheway = true;
+      this.test=1;
+      this.Update();
     }
   }
 }

@@ -1,5 +1,5 @@
 export class Product {
-    id: string;
+    productid: string;
     qtd: number;
 }
   

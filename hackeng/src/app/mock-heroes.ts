@@ -6,10 +6,10 @@ export const pedidos: Order[] = [
       id: "11",
       status: "In Transit",
       products: [{
-        id: "234",
+        productid: "234",
         qtd: 10
       },{
-        id: "456",
+        productid: "456",
         qtd: 5
       }],
       arrival: "01/01/01",
@@ -19,7 +19,7 @@ export const pedidos: Order[] = [
     id: "234",
       status: "In Transit",
       products: [{
-        id: "345",
+        productid: "345",
         qtd: 10
       }],
       arrival: "01/01/01",
@@ -29,7 +29,7 @@ export const pedidos: Order[] = [
     id: "543",
       status: "Delivered",
       products: [{
-        id: "345",
+        productid: "345",
         qtd: 10
       }],
       arrival: "01/01/01",

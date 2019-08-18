@@ -49,7 +49,7 @@ export class TrackingService {
   
 
   getTimeForecast(id: string): Observable<Time> {
-    var url = this.trackingUrl + '/timeforecast'
+    var url = this.trackingUrl + '/get_time/' + id
     return this.http.get<Time>(url);
   }
 
