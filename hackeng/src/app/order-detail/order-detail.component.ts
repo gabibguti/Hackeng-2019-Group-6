@@ -18,8 +18,8 @@ export class OrderDetailComponent implements OnInit {
   success = true;
   cancelled = false;
   products: Product[] = 
-  [{id: '5252653', qtd: 10},
-  {id: '52u49253', qtd: 2}];
+  [{name: '5252653', qtd: 10},
+  {name: '52u49253', qtd: 2}];
 
   constructor(private trackingService: TrackingService) { }
 
