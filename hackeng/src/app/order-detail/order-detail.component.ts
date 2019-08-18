@@ -25,6 +25,8 @@ export class OrderDetailComponent implements OnInit {
   [{id: '5252653', qtd: 10},
   {id: '52u49253', qtd: 2}];
 
+  test: number = 0;
+
   constructor(private trackingService: TrackingService,
     private route: ActivatedRoute) { }
 
@@ -42,6 +44,40 @@ export class OrderDetailComponent implements OnInit {
 
     console.log('pedido', this.order);
 
+  }
+
+  Update() {
+    console.log(this.test);
+    switch(this.test) {
+      case 0:
+          this.shipping = true;
+        break;
+        case 1:
+          this.ontheway = true;
+          this.showCancel = true;
+          break;
+          case 2:
+            this.showCancel = false;
+            this.delivered = true;
+            this.showButtons = true;
+            break;
+            case 3:
+              this.shipping = false;
+              this.ontheway = false;
+              this.delivered = false;
+              this.showCancel = false;
+              this.showButtons = false;
+              this.success = true;
+              this.cancelled = false;
+              break;
+              default:
+                break;
+        }
+        this.test += 1;
+        if(this.test > 3) {
+          this.test = 0;
+
+    }
   }
 
   Cancel() {
