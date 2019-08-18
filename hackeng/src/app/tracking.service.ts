@@ -34,7 +34,7 @@ export class TrackingService {
     
 
   getOrders (id: string): Observable<any[]> {
-    let url = this.trackingUrl + '/get_shipment/' + id;
+    let url = this.trackingUrl + '/get_history/' + id;
     return this.http.get<any[]>(url, this.httpOptions);
   }
 
