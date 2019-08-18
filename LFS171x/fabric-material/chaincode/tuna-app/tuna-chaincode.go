@@ -409,9 +409,9 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	shipments := []Shipment{
-		Shipment{Id: "50001", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+		Shipment{Id: "50001", Status: "In Transit", Arrival: "00:00:00T00:00:00",
 			ClientId: "20001", Products: productsVO1, TripId: "60001"},
-		Shipment{Id: "50002", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+		Shipment{Id: "50002", Status: "In Transit", Arrival: "00:00:00T00:00:00",
 			ClientId: "20002", Products: productsVO2, TripId: "60001"},
 	}
 
