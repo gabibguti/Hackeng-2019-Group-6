@@ -1,0 +1,51 @@
+<div class="container">
+    <br />
+    <div class="row">
+        <h1>Order {{id}}</h1>
+    </div>
+    <br />
+    <br />
+    <div class="row" style="text-align: center">
+        <div class="col">
+            <div class="row" style="text-align: center; display: inline-block;">
+                <i style="font-size: 50px;" [style.color]="shipping == true? 'black': '#cccccc'" class="fas fa-truck"></i>
+            </div>
+            <br>
+            <div class="row" >
+                <span class="textst">Left the distribution center</span>
+            </div>
+        </div>
+        <div class="col">
+            <i style="font-size: 50px;" [style.color]="shipping == true && ontheway == true? 'black': '#cccccc'" class="fas fa-arrow-right"></i>
+         </div>
+        <div class="col">
+                <div class="row" style="text-align: center; display: inline-block;">
+            <i style="font-size: 50px;" [style.color]="shipping == true && ontheway == true? 'black': '#cccccc'" class="fas fa-shipping-fast"></i>
+                </div>
+                <br />
+            <div class="row" >
+                    <span class="textst">Order on the way</span>
+                </div>
+                <div class="row" >
+                        <span class="textst">Time left: {{timeleft | date:'mm:ss'}}</span>
+                    </div>
+        </div>
+        <div class="col">
+            <i style="font-size: 50px;" [style.color]="shipping == true && ontheway == true && delivered == true? 'black': '#cccccc'" class="fas fa-arrow-right"></i>
+        </div>
+        <div class="col">
+                <div class="row" style="text-align: center; display: inline-block;">
+            <i style="font-size: 50px;" [style.color]="shipping == true && ontheway == true && delivered == true? 'black': '#cccccc'" class="fas fa-cubes"></i>
+            </div>
+            <div class="row" >
+            <span class="textst">Delivered</span>
+            </div>
+            <div class="row" >
+                    <button style="background: blue; color: white; font-weight: bold">OK</button>
+            </div>
+            <div class="row" >
+                    <button style="background: red; color: white; font-weight: bold">NOT DELIVERED</button>
+                    </div>
+        </div>
+    </div>
+</div>

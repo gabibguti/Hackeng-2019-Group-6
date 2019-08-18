@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
 import { Pedido } from '../pedidos';
 import {pedidos} from '../mock-heroes'
 import { Router } from '@angular/router';
+import { TrackingService } from '../tracking.service';
 
 @Component({
   selector: 'app-heroes',
@@ -17,7 +17,7 @@ export class HeroesComponent implements OnInit {
   public orders: Pedido[] = [];
   public selectedOrder: Pedido;
 
-  constructor(private heroService: HeroService,
+  constructor(private heroService: TrackingService,
     private router: Router
     ) { }
 

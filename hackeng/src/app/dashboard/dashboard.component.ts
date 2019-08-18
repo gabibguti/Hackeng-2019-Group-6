@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
 import { Pedido } from '../pedidos';
 import { Router } from '@angular/router';
 import { pedidos } from '../mock-heroes';
+import { TrackingService } from '../tracking.service';
+import { Order } from '../Order';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,14 +16,14 @@ export class DashboardComponent implements OnInit {
   public selectedOrder: Pedido;
   public routeOrders: Pedido[] = [];
   public pedidos: Pedido[] = pedidos;
+  public test: Order[] = [];
 
   constructor(
-    private heroService: HeroService,
+    private trackingService: TrackingService,
     private router: Router
     ) { }
 
   ngOnInit() {
-    this.getHeroes();
     this.getPedidos();
     this.pedidos.forEach(pedido => {
       if(pedido.status==="route"){
@@ -31,9 +32,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getHeroes(): void {
-    this.heroService.getHeroes()
-      .subscribe(heroes => this.heroes = heroes.slice(1, 5));
+  getOrders(): void {
+    this.trackingService.getOrders('1234').subscribe(orders => {
+      console.log("GET ORDERS", orders);
+    });
   }
 
   getPedidos(): void {
