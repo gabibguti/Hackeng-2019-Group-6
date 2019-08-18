@@ -383,11 +383,11 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	suppliers := []Supplier{
-		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "67.0006, -70.5476", ProductIds: []string{products[0].Id}},
+		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "-22.764571,-43.4192591", ProductIds: []string{products[0].Id}},
 	}
 
 	clients := []Client{
-		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{"50001"}},
+		Client{Id: "20001", Name: "Honeydukes", Location: "-22.9499071,-43.189428", History: []string{"50001"}},
 	}
 
 	carriers := []Carrier{
@@ -395,7 +395,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	vehicles := []Vehicle{
-		Vehicle{Id: "40001", Location: "51.9435, 8.2735", CarrierId: carriers[0].Id},
+		Vehicle{Id: "40001", Location: "-22.764571,-43.4192591", CarrierId: carriers[0].Id},
 	}
 
 	productsVO := []ProductVO{

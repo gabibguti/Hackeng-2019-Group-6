@@ -530,13 +530,16 @@ return{
 		            res.send("Could not locate tuna")
 		            
 		        } else {
+					debugger
 					console.log("Response is ", query_responses[0].toString());
 					
 					console.log("Sending request to Bing Maps");
 					
-					var waypoint1 = query_responses[0];
-					var waypoint2 = query_responses[query_responses.length-1];
-					var viaWaypoints = query_responses.slice(1, query_responses.length - 1);
+					var queryResponse = JSON.parse(query_responses[0].toString())
+
+					var waypoint1 = queryResponse[0];
+					var waypoint2 = queryResponse[queryResponse.length-1];
+					var viaWaypoints = queryResponse.slice(1, queryResponse.length - 1);
 					var viaQR = "";
 					for (var i = 0; i < viaWaypoints.length; i++) {
 						viaQR += `&viaWaypoint.${i+1}=${viaWaypoints[i]}`;
@@ -552,6 +555,8 @@ return{
 						resp.on('end', () => {
 						  try {
 							const parsedData = JSON.parse(rawData);
+							console.log(parsedData["resourceSets"])
+							console.log(parsedData["resourceSets"][0]["resources"])
 							console.log("Resposta aqui: " + parsedData["resourceSets"][0]["resources"][0]["travelDuration"]); 
 							response = parsedData["resourceSets"][0]["resources"][0]["travelDuration"]
 						  } catch (e) {
