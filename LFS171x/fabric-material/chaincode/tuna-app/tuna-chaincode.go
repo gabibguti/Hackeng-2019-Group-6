@@ -38,10 +38,10 @@ type Tuna struct {
 }
 
 type Supplier struct {
-	Id       string    `json:"id"`
-	Name     string    `json:"name"`
-	Location string    `json:"location"`
-	Products []Product `json:"products"`
+	Id         string   `json:"id"`
+	Name       string   `json:"name"`
+	Location   string   `json:"location"`
+	ProductIds []string `json:"products"`
 }
 
 type Product struct {
@@ -50,16 +50,16 @@ type Product struct {
 }
 
 type Client struct {
-	Id       string     `json:"id"`
-	Name     string     `json:"name"`
-	Location string     `json:"location"`
-	History  []Shipment `json:"shipment"`
+	Id       string   `json:"id"`
+	Name     string   `json:"name"`
+	Location string   `json:"location"`
+	History  []string `json:"shipment"`
 }
 
 type Vehicle struct {
-	Id       string  `json:"id"`
-	Location string  `json:"location"`
-	Carrier  Carrier `json:"carrier"`
+	Id        string `json:"id"`
+	Location  string `json:"location"`
+	CarrierId string `json:"carrierid"`
 }
 
 type Carrier struct {
@@ -67,20 +67,25 @@ type Carrier struct {
 	Name string `json:"name"`
 }
 
+type ProductVO struct {
+	ProductId string `json:"productid"`
+	Qtd       int    `json:"qtd"`
+}
 type Shipment struct {
-	Id       string    `json:"id"`
-	Status   string    `json:"status"`
-	Arrival  string    `json:"arrival"`
-	Client   Client    `json:"client"`
-	Products []Product `json:"products"`
+	Id       string      `json:"id"`
+	Status   string      `json:"status"`
+	Arrival  string      `json:"arrival"`
+	ClientId string      `json:"clientid"`
+	Products []ProductVO `json:"products"`
+	TripId   string      `json:"tripid"`
 }
 
 type Trip struct {
-	Id        string     `json:"id"`
-	Vehicle   Vehicle    `json:"vehicle"`
-	Supplier  Supplier   `json:"supplier"`
-	Shipments []Shipment `json:"shipments"`
-	Departure string     `json:"departure"`
+	Id         string   `json:"id"`
+	VehicleId  string   `json:"vehicleid"`
+	SupplierId string   `json:"supplierid"`
+	Shipments  []string `json:"shipments"`
+	Departure  string   `json:"departure"`
 }
 
 /*
@@ -147,11 +152,11 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	suppliers := []Supplier{
-		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "67.0006, -70.5476", Products: products},
+		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "67.0006, -70.5476", ProductIds: []string{products[0].Id}},
 	}
 
 	clients := []Client{
-		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []Shipment{}},
+		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []string{}},
 	}
 
 	carriers := []Carrier{
@@ -159,7 +164,21 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	vehicles := []Vehicle{
-		Vehicle{Id: "40001", Location: "51.9435, 8.2735", Carrier: carriers[0]},
+		Vehicle{Id: "40001", Location: "51.9435, 8.2735", CarrierId: carriers[0].Id},
+	}
+
+	productsVO := []ProductVO{
+		ProductVO{ProductId: "10001", Qtd: 10},
+	}
+
+	shipments := []Shipment{
+		Shipment{Id: "50001", Status: "A caminho", Arrival: "00:00:00T00:00:00",
+			ClientId: "20001", Products: productsVO, TripId: carriers[0].Id},
+	}
+
+	trips := []Trip{
+		Trip{Id: "60001", VehicleId: "40001", SupplierId: carriers[0].Id,
+			Shipments: []string{"50001"}, Departure: "00:00:00T00:00:00"},
 	}
 
 	i := 0
@@ -204,6 +223,24 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 		vehiclesAsBytes, _ := json.Marshal(vehicles[i])
 		APIstub.PutState(vehicles[i].Id, vehiclesAsBytes)
 		fmt.Println("Added", vehicles[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(shipments) {
+		fmt.Println("i is ", i)
+		shipmentsAsBytes, _ := json.Marshal(shipments[i])
+		APIstub.PutState(shipments[i].Id, shipmentsAsBytes)
+		fmt.Println("Added", shipments[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(trips) {
+		fmt.Println("i is ", i)
+		tripsAsBytes, _ := json.Marshal(trips[i])
+		APIstub.PutState(trips[i].Id, tripsAsBytes)
+		fmt.Println("Added", trips[i])
 		i = i + 1
 	}
 

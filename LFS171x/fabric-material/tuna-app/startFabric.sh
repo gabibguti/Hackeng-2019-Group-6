@@ -33,11 +33,8 @@ docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/g
 printf "\nTotal execution time : $(($(date +%s) - starttime)) secs ...\n\n"
 printf "\nStart with the registerAdmin.js, then registerUser.js, then server.js\n\n"
 
-sleep 1
 rm -r ~/.hfc-key-store
-sleep 1
+cd ../tuna-app
 node registerAdmin.js
-sleep 1
 node registerUser.js
-sleep 1
 node server.js
