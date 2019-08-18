@@ -1,45 +1,39 @@
 import { Hero } from './hero';
-import { Pedido } from './pedidos';
+import { Pedido, Order } from './pedidos';
 
-export const pedidos: Pedido[] = [
+export const pedidos: Order[] = [
     {
       id: "11",
-      status: "route",
-      name: "pedido1",
-      produto: {
-          id: "456",
-          qtd: 10
-      },
-      chegada: "01/01/01",
-      cliente: "client1",
-      viagem: "viagem1"
+      status: "In Transit",
+      products: [{
+        id: "234",
+        qtd: 10
+      },{
+        id: "456",
+        qtd: 5
+      }],
+      arrival: "01/01/01",
     },
 
   {
     id: "234",
-    status: "route",
-    name: "pedido1",
-    produto: {
-        id: "456",
+      status: "In Transit",
+      products: [{
+        id: "345",
         qtd: 10
-    },
-    chegada: "01/01/01",
-    cliente: "client1",
-    viagem: "viagem1"
+      }],
+      arrival: "01/01/01",
   } ,
 
   {
-    id: "444",
-    status: "concluded",
-    name: "pedido1",
-    produto: {
-        id: "456",
+    id: "543",
+      status: "Delivered",
+      products: [{
+        id: "345",
         qtd: 10
-    },
-    chegada: "01/01/01",
-    cliente: "client1",
-    viagem: "viagem1"
-  }  
+      }],
+      arrival: "01/01/01",
+  } ,
 ];
 
 export const HEROES: Hero[] = [

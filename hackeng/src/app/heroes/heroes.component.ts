@@ -21,7 +21,12 @@ export class HeroesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-      this.getOrders();
+      // this.getOrders();
+      pedidos.forEach(order => {
+        if(order.status!=="In Transit"){
+          this.recordOrders.push(order);
+        }
+      });
     }
   
     getOrders(): void {
@@ -40,7 +45,7 @@ export class HeroesComponent implements OnInit {
     if(!this.selectedOrder){
       return;
     }
-    this.router.navigate(["/detail", this.selectedOrder.id])
+    this.router.navigate(["/orderdetail", this.selectedOrder.id])
   }
 
 }

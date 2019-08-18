@@ -1,3 +1,5 @@
+import { Product } from './product';
+
 export class Pedido {
     id: string;
     status: string;
@@ -15,5 +17,5 @@ export class Pedido {
     id: string;
     status: string;
     arrival: string;
-    products: []
+    products: Product[]
   }

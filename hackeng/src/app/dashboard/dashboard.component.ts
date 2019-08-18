@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
   heroes: Hero[] = [];
   public selectedOrder: Order;
   public routeOrders: Order[] = [];
-  public pedidos: Order[];
+  public pedidos: Order[] = pedidos;
   public _ID: string;
 
   constructor(
@@ -26,11 +26,19 @@ export class DashboardComponent implements OnInit {
      }
 
   ngOnInit() {
-    this.getOrders();
+    // this.getOrders();
+    pedidos.forEach(order => {
+      if(order.status==="In Transit"){
+        this.routeOrders.push(order);
+      }
+    });
+    console.log
   }
 
   getOrders(): void {
+    console.log('get orders');
     this.trackingService.getOrders('20001').subscribe(orders => {
+      console.log("orders", orders);
       orders.forEach(order => {
         if(order.status==="In Transit"){
           this.routeOrders.push(order);
@@ -46,7 +54,7 @@ export class DashboardComponent implements OnInit {
     if(!this.selectedOrder){
       return;
     }
-    this.router.navigate(["/detail", this.selectedOrder.id])
+    this.router.navigate(["/orderdetail", this.selectedOrder.id])
   }
 
 }
