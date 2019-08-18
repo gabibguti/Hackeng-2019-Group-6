@@ -530,8 +530,43 @@ return{
 		            res.send("Could not locate tuna")
 		            
 		        } else {
-		            console.log("Response is ", query_responses[0].toString());
-		            res.send(query_responses[0].toString())
+					console.log("Response is ", query_responses[0].toString());
+					
+					console.log("Sending request to Bing Maps");
+					
+					var waypoint1 = query_responses[0];
+					var waypoint2 = query_responses[query_responses.length-1];
+					var viaWaypoints = query_responses.slice(1, query_responses.length - 1);
+					var viaQR = "";
+					for (var i = 0; i < viaWaypoints.length; i++) {
+						viaQR += `&viaWaypoint.${i+1}=${viaWaypoints[i]}`;
+					}
+
+					var url = `${bingHost}?wayPoint.1=${waypoint1}&wayPoint.2=${waypoint2}` + viaQR + `&${bingKeyQS}`;
+
+					var response
+					http.get(url, (resp) => {
+						resp.setEncoding('utf8');
+						let rawData = '';
+						resp.on('data', (chunk) => { rawData += chunk; });
+						resp.on('end', () => {
+						  try {
+							const parsedData = JSON.parse(rawData);
+							console.log("Resposta aqui: " + parsedData["resourceSets"][0]["resources"][0]["travelDuration"]); 
+							response = parsedData["resourceSets"][0]["resources"][0]["travelDuration"]
+						  } catch (e) {
+							console.error(e.message);
+							response = e.message
+						  }
+						  finally{
+							console.log("Response: " + response)
+		            		res.send(response.toString())
+						  }
+						  
+						});
+					})
+					
+
 		        }
 		    } else {
 		        console.log("No payloads were returned from query");
