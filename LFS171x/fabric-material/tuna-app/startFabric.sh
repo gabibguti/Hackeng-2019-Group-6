@@ -34,6 +34,7 @@ printf "\nTotal execution time : $(($(date +%s) - starttime)) secs ...\n\n"
 printf "\nStart with the registerAdmin.js, then registerUser.js, then server.js\n\n"
 
 rm -r ~/.hfc-key-store
+cd ../tuna-app
 node registerAdmin.js
 node registerUser.js
 node server.js
