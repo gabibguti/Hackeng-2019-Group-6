@@ -53,7 +53,7 @@ type Client struct {
 	Id       string   `json:"id"`
 	Name     string   `json:"name"`
 	Location string   `json:"location"`
-	History  []string `json:"shipment"`
+	History  []string `json:"history"`
 }
 
 type Vehicle struct {
@@ -112,6 +112,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryTuna(APIstub, args)
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
+	} else if function == "getHistory" {
+			return s.getHistory(APIstub,args)
 	} else if function == "recordTuna" {
 		return s.recordTuna(APIstub, args)
 	} else if function == "queryAllTuna" {
@@ -121,6 +123,40 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
+}
+
+/*
+ * The queryTuna method *
+Used to view the records of one particular tuna
+It takes one argument -- the key for the tuna in question
+*/
+func (s *SmartContract) getHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response 
+{
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	clientAsBytes, _ := APIstub.GetState(args[0])
+	if clientAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	client := Client{}
+	json.Unmarshal(clientAsBytes, &client)
+	history := client.history
+	i := 0
+	shipmentHistory := []Shipment{}
+	for i < len(history) 
+	{
+		deliverId := history[i];
+		shipmentAsBytes, _ = APIstub.GetState(deliverId)
+		shipment := Shipment{}
+		json.Unmarshal(shipmentAsBytes, &shipment)
+		shipmentHistory = append(shipmentHistory,shipment)
+		i = i + 1
+	}
+	shipmentHistoryAsBytes, _ = json.Marshal(shipmentHistory)
+	return shim.Success(shipmentHistoryAsBytes)
 }
 
 /*
