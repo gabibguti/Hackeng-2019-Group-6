@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
 import { Pedido, Order } from '../pedidos';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { pedidos } from '../mock-heroes';
 import { TrackingService } from '../tracking.service';
 
@@ -15,11 +15,15 @@ export class DashboardComponent implements OnInit {
   public selectedOrder: Order;
   public routeOrders: Order[] = [];
   public pedidos: Order[];
+  public _ID: string;
 
   constructor(
     private trackingService: TrackingService,
-    private router: Router
-    ) { }
+    private router: Router,
+    private route: ActivatedRoute
+    ) {
+      this._ID = this.route.snapshot.params.param1;
+     }
 
   ngOnInit() {
     this.getOrders();
