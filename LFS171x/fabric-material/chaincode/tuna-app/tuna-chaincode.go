@@ -53,7 +53,7 @@ type Client struct {
 	Id       string   `json:"id"`
 	Name     string   `json:"name"`
 	Location string   `json:"location"`
-	History  []string `json:"shipment"`
+	History  []string `json:"history"`
 }
 
 type Vehicle struct {
@@ -118,6 +118,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryAllTuna(APIstub)
 	} else if function == "changeTunaHolder" {
 		return s.changeTunaHolder(APIstub, args)
+	} else if function == "getAddresses" {
+		return s.getAddresses(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -139,6 +141,73 @@ func (s *SmartContract) queryTuna(APIstub shim.ChaincodeStubInterface, args []st
 		return shim.Error("Could not locate tuna")
 	}
 	return shim.Success(tunaAsBytes)
+}
+
+func (s *SmartContract) getAddresses(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	shipmentAsBytes, _ := APIstub.GetState(args[0])
+	if shipmentAsBytes == nil {
+		return shim.Error("Could not locate shipment")
+	}
+
+	shipment := Shipment{}
+
+	json.Unmarshal(shipmentAsBytes, &shipment)
+
+	myClient := shipment.ClientId
+
+	tripAsBytes, _ := APIstub.GetState(shipment.TripId)
+	if tripAsBytes == nil {
+		return shim.Error("Could not locate trip")
+	}
+	trip := Trip{}
+
+	json.Unmarshal(tripAsBytes, &trip)
+
+	vehicleAsBytes, _ := APIstub.GetState(trip.VehicleId)
+	if vehicleAsBytes == nil {
+		return shim.Error("Could not locate vehicle")
+	}
+	vehicle := Vehicle{}
+
+	json.Unmarshal(vehicleAsBytes, &vehicle)
+
+	addresses := []string{vehicle.Location}
+
+	i := 0
+	for i < len(trip.Shipments) {
+		shipAsBytes, _ := APIstub.GetState(trip.Shipments[i])
+		if shipAsBytes == nil {
+			return shim.Error("Could not locate ship")
+		}
+		ship := Shipment{}
+		json.Unmarshal(shipAsBytes, &ship)
+
+		if ship.Status != "In Transit" {
+			continue
+		}
+
+		clientAsBytes, _ := APIstub.GetState(ship.ClientId)
+		if clientAsBytes == nil {
+			return shim.Error("Could not locate client")
+		}
+		client := Client{}
+		json.Unmarshal(clientAsBytes, &client)
+
+		addresses = append(addresses, client.Location)
+		if client.Id == myClient {
+			break
+		}
+
+		i = i + 1
+	}
+
+	addressesAsBytes, _ := json.Marshal(addresses)
+	return shim.Success(addressesAsBytes)
 }
 
 /*
@@ -172,8 +241,8 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	}
 
 	shipments := []Shipment{
-		Shipment{Id: "50001", Status: "A caminho", Arrival: "00:00:00T00:00:00",
-			ClientId: "20001", Products: productsVO, TripId: carriers[0].Id},
+		Shipment{Id: "50001", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+			ClientId: "20001", Products: productsVO, TripId: "60001"},
 	}
 
 	trips := []Trip{
