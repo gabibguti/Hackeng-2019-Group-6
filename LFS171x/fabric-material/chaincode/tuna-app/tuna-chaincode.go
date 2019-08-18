@@ -146,7 +146,6 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	return shim.Error("Invalid Smart Contract function name.")
 }
 
-
 /*
  * The changeTunaHolder method *
 The data in the world state can be updated with who has possession.
@@ -200,8 +199,8 @@ func (s *SmartContract) changeStatus(APIstub shim.ChaincodeStubInterface, args [
 	// we are skipping this check for this example
 	shipment.Status = args[1]
 
-	ShipmentAsBytes, _ = json.Marshal(shipment)
-	err := APIstub.PutState(args[0], ShipmentAsBytes)
+	shipmentAsBytes, _ = json.Marshal(shipment)
+	err := APIstub.PutState(args[0], shipmentAsBytes)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
 	}
