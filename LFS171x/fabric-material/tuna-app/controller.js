@@ -536,17 +536,19 @@ return{
 					console.log("Sending request to Bing Maps");
 					
 					var queryResponse = JSON.parse(query_responses[0].toString())
+					console.log(queryResponse)
 
 					var waypoint1 = queryResponse[0];
 					var waypoint2 = queryResponse[queryResponse.length-1];
 					var viaWaypoints = queryResponse.slice(1, queryResponse.length - 1);
 					var viaQR = "";
 					for (var i = 0; i < viaWaypoints.length; i++) {
-						viaQR += `&viaWaypoint.${i+1}=${viaWaypoints[i]}`;
+						viaQR += `&waypoint.${i+2}=${viaWaypoints[i]}`;
 					}
 
-					var url = `${bingHost}?wayPoint.1=${waypoint1}&wayPoint.2=${waypoint2}` + viaQR + `&${bingKeyQS}`;
+					var url = `${bingHost}?wayPoint.1=${waypoint1}&wayPoint.${i+2}=${waypoint2}` + viaQR + `&${bingKeyQS}`;
 
+					console.log(url)
 					var response
 					http.get(url, (resp) => {
 						resp.setEncoding('utf8');

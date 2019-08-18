@@ -380,6 +380,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	products := []Product{
 		Product{Id: "10001", Name: "Chocolate Frog"},
+		Product{Id: "10002", Name: "Wand"},
 	}
 
 	suppliers := []Supplier{
@@ -388,6 +389,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	clients := []Client{
 		Client{Id: "20001", Name: "Honeydukes", Location: "-22.9499071,-43.189428", History: []string{"50001"}},
+		Client{Id: "20002", Name: "Oliwanders", Location: "-22.9557474,-43.1995033", History: []string{"50002"}},
 	}
 
 	carriers := []Carrier{
@@ -398,18 +400,24 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 		Vehicle{Id: "40001", Location: "-22.764571,-43.4192591", CarrierId: carriers[0].Id},
 	}
 
-	productsVO := []ProductVO{
+	productsVO1 := []ProductVO{
 		ProductVO{ProductId: "10001", Qtd: 10},
+	}
+
+	productsVO2 := []ProductVO{
+		ProductVO{ProductId: "10002", Qtd: 10},
 	}
 
 	shipments := []Shipment{
 		Shipment{Id: "50001", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
-			ClientId: "20001", Products: productsVO, TripId: "60001"},
+			ClientId: "20001", Products: productsVO1, TripId: "60001"},
+		Shipment{Id: "50002", Status: "In  Transit", Arrival: "00:00:00T00:00:00",
+			ClientId: "20002", Products: productsVO2, TripId: "60001"},
 	}
 
 	trips := []Trip{
 		Trip{Id: "60001", VehicleId: "40001", SupplierId: carriers[0].Id,
-			Shipments: []string{"50001"}, Departure: "00:00:00T00:00:00"},
+			Shipments: []string{"50001", "50002"}, Departure: "00:00:00T00:00:00"},
 	}
 
 	i := 0
