@@ -3,9 +3,9 @@
 
   <table id="t01">
       <tr>
-        <th></th>
-        <th>Id</th>
-        <th>Status</th>
+        <td>No</td>
+        <td>Id</td>
+        <td>Status</td>
       </tr>
       <tr class="row selected" *ngFor="let pedido of routeOrders; let i = index" (click)="selectedOrder = pedido"
       [class.selected]="selectedOrder && selectedOrder.id === pedido.id" >
