@@ -16,10 +16,12 @@ export class TrackingService {
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:8000',
-      'Access-Control-Allow-Credentials': 'false',
-      'Accept': 'application/json'
+      // 'Content-Type':  'application/json',
+      // 'Access-Control-Allow-Origin': 'http://localhost:8000',
+      // 'Access-Control-Allow-Credentials': 'true',
+      // 'Accept': 'application/json',
+      // 'Access-Control-Allow-Headers': 'Cache-Control',
+      // 'Access-Control-Allow-Methods': 'GET'
     })
   };
 
@@ -32,14 +34,8 @@ export class TrackingService {
     
 
   getOrders (id: string): Observable<any[]> {
-    let url = this.trackingUrl + '/get_history/' + id;
-    console.log('op', this.httpOptions);
+    let url = this.trackingUrl + '/get_shipment/' + id;
     return this.http.get<any[]>(url, this.httpOptions);
-  }
-
-  getOrders2(): Promise<any[]>{
-    let url = this.trackingUrl + "get_history/50001"
-    return this.http.get<any[]>(url).toPromise();
   }
 
   getTimeForecast (): Observable<Time> {
