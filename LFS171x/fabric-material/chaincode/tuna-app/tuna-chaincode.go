@@ -131,6 +131,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.getHistory(APIstub, args)
 	} else if function == "getShipment" {
 		return s.getShipment(APIstub, args)
+	} else if function == "changeStatus" {
+		return s.changeStatus(APIstub, args)
+	} else if function == "changeTruckPosition" {
+		return s.changeTruckPosition(APIstub, args)
 	} else if function == "recordTuna" {
 		return s.recordTuna(APIstub, args)
 	} else if function == "queryAllTuna" {
@@ -140,6 +144,69 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
+}
+
+
+/*
+ * The changeTunaHolder method *
+The data in the world state can be updated with who has possession.
+This function takes in 2 arguments, tuna id and new holder name.
+*/
+func (s *SmartContract) changeTruckPosition(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	vehicleAsBytes, _ := APIstub.GetState(args[0])
+	if vehicleAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	vehicle := Vehicle{}
+
+	json.Unmarshal(vehicleAsBytes, &vehicle)
+	// Normally check that the specified argument is a valid holder of tuna
+	// we are skipping this check for this example
+	vehicle.Location = args[1]
+
+	vehicleAsBytes, _ = json.Marshal(vehicle)
+	err := APIstub.PutState(args[0], vehicleAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+	}
+
+	return shim.Success(nil)
+}
+
+/*
+ * The changeTunaHolder method *
+The data in the world state can be updated with who has possession.
+This function takes in 2 arguments, tuna id and new holder name.
+*/
+func (s *SmartContract) changeStatus(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	shipmentAsBytes, _ := APIstub.GetState(args[0])
+	if shipmentAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	shipment := Shipment{}
+
+	json.Unmarshal(shipmentAsBytes, &shipment)
+	// Normally check that the specified argument is a valid holder of tuna
+	// we are skipping this check for this example
+	shipment.Status = args[1]
+
+	ShipmentAsBytes, _ = json.Marshal(shipment)
+	err := APIstub.PutState(args[0], ShipmentAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+	}
+
+	return shim.Success(nil)
 }
 
 /*
