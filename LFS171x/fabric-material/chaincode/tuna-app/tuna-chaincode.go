@@ -50,9 +50,9 @@ type Product struct {
 }
 
 type ProductInList struct {
-	ProductId string `json:"productid"`
+	Id   string `json:"id"`
 	Name string `json:"name"`
-	Qtd  int  `json:"qtd"`
+	Qtd  int    `json:"qtd"`
 }
 
 type Client struct {
@@ -84,6 +84,15 @@ type Shipment struct {
 	ClientId string      `json:"clientid"`
 	Products []ProductVO `json:"products"`
 	TripId   string      `json:"tripid"`
+}
+
+type ShipmentVO struct {
+	Id       string          `json:"id"`
+	Status   string          `json:"status"`
+	Arrival  string          `json:"arrival"`
+	ClientId string          `json:"clientid"`
+	Products []ProductInList `json:"products"`
+	TripId   string          `json:"tripid"`
 }
 
 type Trip struct {
@@ -182,22 +191,30 @@ func (s *SmartContract) getShipment(APIstub shim.ChaincodeStubInterface, args []
 	}
 	shipment := Shipment{}
 	json.Unmarshal(shipmentAsBytes, &shipment)
-	productList := shipment.products
+	productList := shipment.Products
 	newProductList := []ProductInList{}
 	i := 0
 	for i < len(productList) {
-		productId := productList[i].productid
-		productQtd := productList[i].qtd
-		productAsBytes := APIstub.GetState(productId)
+		productId := productList[i].ProductId
+		productQtd := productList[i].Qtd
+		productAsBytes, _ := APIstub.GetState(productId)
 		product := Product{}
 		json.Unmarshal(productAsBytes, &product)
-		productName:=product.name
-		newProductList = append(newProductList, 
-			ProductInList{Id: productId, Name: productName, Qtd: productQtd })
+		productName := product.Name
+		newProductList = append(newProductList,
+			ProductInList{Id: productId, Name: productName, Qtd: productQtd})
 		i = i + 1
 	}
-	newProductListAsBytes, _ := json.Marshal(newProductList)
-	return shim.Success(newProductListAsBytes)
+
+	shipmentVO := ShipmentVO{}
+	shipmentVO.Id = shipment.Id
+	shipmentVO.Arrival = shipment.Arrival
+	shipmentVO.ClientId = shipment.ClientId
+	shipmentVO.Status = shipment.Status
+	shipmentVO.TripId = shipment.TripId
+	shipmentVO.Products = newProductList
+	shipmentVOAsBytes, _ := json.Marshal(shipmentVO)
+	return shim.Success(shipmentVOAsBytes)
 }
 
 /*
