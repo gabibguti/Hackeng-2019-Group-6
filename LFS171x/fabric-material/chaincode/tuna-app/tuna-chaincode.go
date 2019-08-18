@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
@@ -164,6 +165,7 @@ func (s *SmartContract) getAddresses(APIstub shim.ChaincodeStubInterface, args [
 	if tripAsBytes == nil {
 		return shim.Error("Could not locate trip")
 	}
+
 	trip := Trip{}
 
 	json.Unmarshal(tripAsBytes, &trip)
@@ -187,7 +189,7 @@ func (s *SmartContract) getAddresses(APIstub shim.ChaincodeStubInterface, args [
 		ship := Shipment{}
 		json.Unmarshal(shipAsBytes, &ship)
 
-		if ship.Status != "In Transit" {
+		if strings.Compare(ship.Status, "In Transit") == 0 {
 			continue
 		}
 
@@ -199,7 +201,7 @@ func (s *SmartContract) getAddresses(APIstub shim.ChaincodeStubInterface, args [
 		json.Unmarshal(clientAsBytes, &client)
 
 		addresses = append(addresses, client.Location)
-		if client.Id == myClient {
+		if strings.Compare(client.Id, myClient) == 0 {
 			break
 		}
 
