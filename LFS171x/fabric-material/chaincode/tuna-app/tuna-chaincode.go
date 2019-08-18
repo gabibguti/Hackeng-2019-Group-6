@@ -5,15 +5,15 @@
 
  This code is based on code written by the Hyperledger Fabric community.
   Original code can be found here: https://github.com/hyperledger/fabric-samples/blob/release/chaincode/fabcar/fabcar.go
- */
+*/
 
 package main
 
-/* Imports  
-* 4 utility libraries for handling bytes, reading and writing JSON, 
-formatting, and string manipulation  
-* 2 specific Hyperledger Fabric specific libraries for Smart Contracts  
-*/ 
+/* Imports
+* 4 utility libraries for handling bytes, reading and writing JSON,
+formatting, and string manipulation
+* 2 specific Hyperledger Fabric specific libraries for Smart Contracts
+*/
 import (
 	"bytes"
 	"encoding/json"
@@ -28,22 +28,68 @@ import (
 type SmartContract struct {
 }
 
-/* Define Tuna structure, with 4 properties.  
+/* Define Tuna structure, with 4 properties.
 Structure tags are used by encoding/json library
 */
 type Tuna struct {
-	Vessel string `json:"vessel"`
+	Vessel    string `json:"vessel"`
 	Timestamp string `json:"timestamp"`
 	Location  string `json:"location"`
-	Holder  string `json:"holder"`
+	Holder    string `json:"holder"`
+}
+
+type Supplier struct {
+	Id       string    `json:"id"`
+	Name     string    `json:"name"`
+	Location string    `json:"location"`
+	Products []Product `json:"products"`
+}
+
+type Product struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type Client struct {
+	Id       string     `json:"id"`
+	Name     string     `json:"name"`
+	Location string     `json:"location"`
+	History  []Shipment `json:"shipment"`
+}
+
+type Vehicle struct {
+	Id       string  `json:"id"`
+	Location string  `json:"location"`
+	Carrier  Carrier `json:"carrier"`
+}
+
+type Carrier struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type Shipment struct {
+	Id       string    `json:"id"`
+	Status   string    `json:"status"`
+	Arrival  string    `json:"arrival"`
+	Client   Client    `json:"client"`
+	Products []Product `json:"products"`
+}
+
+type Trip struct {
+	Id        string     `json:"id"`
+	Vehicle   Vehicle    `json:"vehicle"`
+	Supplier  Supplier   `json:"supplier"`
+	Shipments []Shipment `json:"shipments"`
+	Departure string     `json:"departure"`
 }
 
 /*
  * The Init method *
  called when the Smart Contract "tuna-chaincode" is instantiated by the network
- * Best practice is to have any Ledger initialization in separate function 
+ * Best practice is to have any Ledger initialization in separate function
  -- see initLedger()
- */
+*/
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	return shim.Success(nil)
 }
@@ -52,7 +98,7 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
  * The Invoke method *
  called when an application requests to run the Smart Contract "tuna-chaincode"
  The app also specifies the specific smart contract function to call with args
- */
+*/
 func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	// Retrieve the requested Smart Contract function and arguments
@@ -77,7 +123,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
  * The queryTuna method *
 Used to view the records of one particular tuna
 It takes one argument -- the key for the tuna in question
- */
+*/
 func (s *SmartContract) queryTuna(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
@@ -94,7 +140,7 @@ func (s *SmartContract) queryTuna(APIstub shim.ChaincodeStubInterface, args []st
 /*
  * The initLedger method *
 Will add test data (10 tuna catches)to our network
- */
+*/
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	tuna := []Tuna{
 		Tuna{Vessel: "923F", Location: "67.0006, -70.5476", Timestamp: "1504054225", Holder: "Miriam"},
@@ -123,16 +169,16 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 /*
  * The recordTuna method *
-Fisherman like Sarah would use to record each of her tuna catches. 
-This method takes in five arguments (attributes to be saved in the ledger). 
- */
+Fisherman like Sarah would use to record each of her tuna catches.
+This method takes in five arguments (attributes to be saved in the ledger).
+*/
 func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
-	var tuna = Tuna{ Vessel: args[1], Location: args[2], Timestamp: args[3], Holder: args[4] }
+	var tuna = Tuna{Vessel: args[1], Location: args[2], Timestamp: args[3], Holder: args[4]}
 
 	tunaAsBytes, _ := json.Marshal(tuna)
 	err := APIstub.PutState(args[0], tunaAsBytes)
@@ -146,8 +192,8 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 /*
  * The queryAllTuna method *
 allows for assessing all the records added to the ledger(all tuna catches)
-This method does not take any arguments. Returns JSON string containing results. 
- */
+This method does not take any arguments. Returns JSON string containing results.
+*/
 func (s *SmartContract) queryAllTuna(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	startKey := "0"
@@ -193,9 +239,9 @@ func (s *SmartContract) queryAllTuna(APIstub shim.ChaincodeStubInterface) sc.Res
 
 /*
  * The changeTunaHolder method *
-The data in the world state can be updated with who has possession. 
-This function takes in 2 arguments, tuna id and new holder name. 
- */
+The data in the world state can be updated with who has possession.
+This function takes in 2 arguments, tuna id and new holder name.
+*/
 func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 2 {
@@ -224,9 +270,9 @@ func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, ar
 
 /*
  * main function *
-calls the Start function 
+calls the Start function
 The main function starts the chaincode in the container during instantiation.
- */
+*/
 func main() {
 
 	// Create a new Smart Contract
