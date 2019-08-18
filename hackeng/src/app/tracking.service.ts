@@ -42,8 +42,14 @@ export class TrackingService {
     return this.http.get<any[]>(url).toPromise();
   }
 
-  getTimeForecast (): Observable<Time> {
-    var url = this.trackingUrl + '/timeforecast'
+  getTimeForecast (id: string): Observable<Time> {
+    var url = this.trackingUrl + '/get_time/' + encodeURIComponent(id);
     return this.http.get<Time>(url);
+  }
+
+  sendDeliverResponse(id: string, response: string) {
+    var resp = response? 'ok' : 'notok';
+    var url = this.trackingUrl + '/' + encodeURIComponent(id) + '?' + 'msg=' + resp;
+    return this.http.get(url);
   }
 }
