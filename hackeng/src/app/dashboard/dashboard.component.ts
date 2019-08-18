@@ -20,15 +20,9 @@ export class DashboardComponent implements OnInit {
     
   }
 
-  getHeroes(): void {
-    this.trackingService.getHeroes()
-      .subscribe(heroes => this.heroes = heroes.slice(1, 5));
-  }
-
   getOrders(): void {
     this.trackingService.getOrders().subscribe(orders => {
-      this.teste = orders;
-      console.log(orders);
+      console.log("GET ORDERS", orders);
     });
   }
 }
