@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
@@ -142,25 +141,69 @@ func (s *SmartContract) queryTuna(APIstub shim.ChaincodeStubInterface, args []st
 Will add test data (10 tuna catches)to our network
 */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	tuna := []Tuna{
-		Tuna{Vessel: "923F", Location: "67.0006, -70.5476", Timestamp: "1504054225", Holder: "Miriam"},
-		Tuna{Vessel: "M83T", Location: "91.2395, -49.4594", Timestamp: "1504057825", Holder: "Dave"},
-		Tuna{Vessel: "T012", Location: "58.0148, 59.01391", Timestamp: "1493517025", Holder: "Igor"},
-		Tuna{Vessel: "P490", Location: "-45.0945, 0.7949", Timestamp: "1496105425", Holder: "Amalea"},
-		Tuna{Vessel: "S439", Location: "-107.6043, 19.5003", Timestamp: "1493512301", Holder: "Rafa"},
-		Tuna{Vessel: "J205", Location: "-155.2304, -15.8723", Timestamp: "1494117101", Holder: "Shen"},
-		Tuna{Vessel: "S22L", Location: "103.8842, 22.1277", Timestamp: "1496104301", Holder: "Leila"},
-		Tuna{Vessel: "EI89", Location: "-132.3207, -34.0983", Timestamp: "1485066691", Holder: "Yuan"},
-		Tuna{Vessel: "129R", Location: "153.0054, 12.6429", Timestamp: "1485153091", Holder: "Carlo"},
-		Tuna{Vessel: "49W4", Location: "51.9435, 8.2735", Timestamp: "1487745091", Holder: "Fatima"},
+
+	products := []Product{
+		Product{Id: "10001", Name: "Chocolate Frog"},
+	}
+
+	suppliers := []Supplier{
+		Supplier{Id: "1", Name: "Hogwarts Magic Foods", Location: "67.0006, -70.5476", Products: products},
+	}
+
+	clients := []Client{
+		Client{Id: "20001", Name: "Honeydukes", Location: "91.2395, -49.4594", History: []Shipment{}},
+	}
+
+	carriers := []Carrier{
+		Carrier{Id: "30001", Name: "Nimbus"},
+	}
+
+	vehicles := []Vehicle{
+		Vehicle{Id: "40001", Location: "51.9435, 8.2735", Carrier: carriers[0]},
 	}
 
 	i := 0
-	for i < len(tuna) {
+	for i < len(products) {
 		fmt.Println("i is ", i)
-		tunaAsBytes, _ := json.Marshal(tuna[i])
-		APIstub.PutState(strconv.Itoa(i+1), tunaAsBytes)
-		fmt.Println("Added", tuna[i])
+		productsAsBytes, _ := json.Marshal(products[i])
+		APIstub.PutState(products[i].Id, productsAsBytes)
+		fmt.Println("Added", products[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(suppliers) {
+		fmt.Println("i is ", i)
+		suppliersAsBytes, _ := json.Marshal(suppliers[i])
+		APIstub.PutState(suppliers[i].Id, suppliersAsBytes)
+		fmt.Println("Added", suppliers[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(clients) {
+		fmt.Println("i is ", i)
+		clientsAsBytes, _ := json.Marshal(clients[i])
+		APIstub.PutState(clients[i].Id, clientsAsBytes)
+		fmt.Println("Added", clients[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(carriers) {
+		fmt.Println("i is ", i)
+		carriersAsBytes, _ := json.Marshal(carriers[i])
+		APIstub.PutState(carriers[i].Id, carriersAsBytes)
+		fmt.Println("Added", carriers[i])
+		i = i + 1
+	}
+
+	i = 0
+	for i < len(vehicles) {
+		fmt.Println("i is ", i)
+		vehiclesAsBytes, _ := json.Marshal(vehicles[i])
+		APIstub.PutState(vehicles[i].Id, vehiclesAsBytes)
+		fmt.Println("Added", vehicles[i])
 		i = i + 1
 	}
 
