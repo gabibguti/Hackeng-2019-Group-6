@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TrackingService } from '../tracking.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -10,11 +11,34 @@ export class OrderDetailComponent implements OnInit {
   shipping = false;
   ontheway = false;
   delivered = false;
-  timeleft = 1288323623006;
+  timeleft: any = 1288323623006;
+  showButtons = false;
+  showCancel = false;
+  success = true;
+  cancelled = false;
 
-  constructor() { }
+  constructor(private trackingService: TrackingService) { }
 
   ngOnInit() {
+    this.trackingService.getTimeForecast(this.id).subscribe(data => {
+      this.timeleft = data;
+    })
   }
 
+  Cancel() {
+    this.cancelled = true;
+    this.showCancel = false;
+    this.trackingService.sendDeliverResponse(this.id, 'cancelled');
+  }
+
+  DeliverSuccess() {
+    this.showButtons = false;
+    this.trackingService.sendDeliverResponse(this.id, 'delivered');
+  }
+
+  DeliverProblem() {
+    this.success = false;
+    this.showButtons = false;
+    this.trackingService.sendDeliverResponse(this.id, 'not delivered');
+  }
 }
