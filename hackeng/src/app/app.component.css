@@ -8,21 +8,26 @@ h2 {
   margin-top: 0;
   padding-top: 0;
 }
-nav a {
+.but {
   padding: 5px 10px;
   text-decoration: none;
   margin-top: 10px;
+  margin-right: 5px;
   display: inline-block;
   background-color: #eee;
   border-radius: 4px;
 }
-nav a:visited, a:link {
+.topBut .but:visited, .but:link {
   color: #334953;
 }
-nav a:hover {
+.topBut .but:hover {
   color: #039be5;
   background-color: #CFD8DC;
 }
-nav a.active {
+.topBut .but.active {
+  color: #039be5;
+}
+
+.selected{
   color: #039be5;
 }
