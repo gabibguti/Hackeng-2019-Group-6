@@ -6,10 +6,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Hero } from './hero';
 import { MessageService } from './message.service';
+import { Order } from './Order';
 
 
 @Injectable({ providedIn: 'root' })
-export class HeroService {
+export class TrackingService {
+
+  private trackingUrl = 'localhost:8000'
 
   private heroesUrl = 'api/heroes';  // URL to web api
 
@@ -20,6 +23,10 @@ export class HeroService {
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
+
+  getOrders (): Observable<Order[]> {
+    return this.http.get<Order[]>(this.trackingUrl);
+  }
 
   /** GET heroes from the server */
   getHeroes (): Observable<Hero[]> {
@@ -116,6 +123,6 @@ export class HeroService {
 
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
-    this.messageService.add(`HeroService: ${message}`);
+    this.messageService.add(`TrackingService: ${message}`);
   }
 }
