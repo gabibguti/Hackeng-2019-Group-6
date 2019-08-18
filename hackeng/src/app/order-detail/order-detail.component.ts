@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TrackingService } from '../tracking.service';
+import { Product } from '../product';
 
 @Component({
   selector: 'app-order-detail',
@@ -16,6 +17,9 @@ export class OrderDetailComponent implements OnInit {
   showCancel = false;
   success = true;
   cancelled = false;
+  products: Product[] = 
+  [{id: '5252653', qtd: 10},
+  {id: '52u49253', qtd: 2}];
 
   constructor(private trackingService: TrackingService) { }
 

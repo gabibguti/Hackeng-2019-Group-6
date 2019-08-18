@@ -1,4 +1,4 @@
-<div class="container">
+<div style="margin: 15px">
     <br />
     <div class="row">
         <h1>Order {{id}}</h1>
@@ -60,5 +60,36 @@
                         <span class="notdelivered">NOT DELIVERED</span>
                     </div>
         </div>
+    </div>
+    <br />
+    <br />
+    <div>
+        <h3>Products</h3>
+        <br/>
+        <div class="row">
+        <div class="col-1">
+            </div>
+            <div class="col-2">
+                <span class="tabletitle">ID</span>
+            </div>
+            <div class="col-9">
+                <span class="tabletitle">QUANTITY</span>
+            </div>
+        </div>
+
+            <div *ngFor="let p of products">
+            <div class="row">
+                <div class="col-1">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="col-2">
+                    <span>{{p.id}}</span>
+                </div>
+                <div class="col-9">
+                    <span>{{p.qtd}}</span>
+                </div>
+            </div>
+                
+            </div>
     </div>
 </div>
